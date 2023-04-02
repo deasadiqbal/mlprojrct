@@ -1,3 +1,5 @@
+
+
 import os
 import pandas as pd
 import sys
@@ -6,6 +8,9 @@ from src.logger import logging
 
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -32,7 +37,7 @@ class DataIngestion:
 
             test_set.to_csv(self.config.test_data_path, index=False, header=True)
             
-            logging.info('data saved successfully')
+            logging.info('data saved successfully') 
 
             return(
                 self.config.train_data_path,
@@ -40,12 +45,15 @@ class DataIngestion:
             )
         except Exception as e:
             logging.error('Error while preparing data')
-            ExceptionHandler(e)
+            ExceptionHandler(e) 
 
 if __name__ == '__main__':
     config = DataIngestionConfig()
-    data_ingestion = DataIngestion(config)
-    data_ingestion.initate_data_ingestion()
+    obj = DataIngestion(config)
+    train_data, test_data = obj.initate_data_ingestion()
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train_data,test_data)
+
 
 
 
